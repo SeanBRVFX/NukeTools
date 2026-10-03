@@ -1,0 +1,793 @@
+set cut_paste_input [stack 0]
+version 15.1 v6
+push $cut_paste_input
+Group {
+ name SR_MultiGrade
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\nkn = k.name()\n\nif kn == \"method\":\n    blackpoint = n.knobs()\[\"blackpoint\"]\n    whitepoint = n.knobs()\[\"whitepoint\"]\n    lift = n.knobs()\[\"black\"]\n    gain = n.knobs()\[\"white\"]\n    multiply = n.knobs()\[\"multiply\"]\n    offset = n.knobs()\[\"add\"]\n    gamma = n.knobs()\[\"gamma\"]\n    reverse = n.knobs()\[\"reverse\"]\n    blackClamp = n.knobs()\[\"black_clamp\"]\n    whiteClamp = n.knobs()\[\"white_clamp\"]\n    merge = n.knobs()\[\"mergeMode\"]\n    mix = n.knobs()\[\"mix\"]\n    mixMerge = n.knobs()\[\"mix_merge\"]\n    preBlurBG = n.knobs()\[\"preBlurBG\"]\n    crop = n.knobs()\[\"crop\"]\n\n    parent = nuke.thisNode().parent()\n\n    if k.value() == \"grade\":\n        blackpoint.setVisible(True)\n        whitepoint.setVisible(True)\n        lift.setVisible(True)\n        gain.setVisible(True)\n        multiply.setVisible(True)\n        offset.setVisible(True)\n        gamma.setVisible(True)\n        reverse.setVisible(True)\n        blackClamp.setVisible(True)\n        whiteClamp.setVisible(True)\n        mix.setVisible(True)\n        merge.setVisible(False)\n        mixMerge.setVisible(False)\n        preBlurBG.setVisible(False)\n        crop.setVisible(False)\n\n    else:\n        blackpoint.setVisible(False)\n        whitepoint.setVisible(False)\n        lift.setVisible(False)\n        gain.setVisible(False)\n        multiply.setVisible(False)\n        offset.setVisible(False)\n        gamma.setVisible(False)\n        reverse.setVisible(False)\n        blackClamp.setVisible(False)\n        whiteClamp.setVisible(False)\n        merge.setVisible(True)\n        mix.setVisible(True)\n        mixMerge.setVisible(True)\n        preBlurBG.setVisible(True)\n        crop.setVisible(True)\n\n"
+ tile_color 0x411050ff
+ label "\[value method]\n\[expr \{\n    (\[value rY] && \[value gx] && \[value by]) ? \"RGB\" :\n    (\[value rY] && \[value gx] && !\[value by]) ? \"RB\" :\n    (\[value rY] && !\[value gx] && \[value by]) ? \"RG\" :\n    (!\[value rY] && \[value gx] && \[value by]) ? \"GB\" :\n    (\[value rY] && !\[value gx] && !\[value by]) ? \"R\" :\n    (!\[value rY] && \[value gx] && !\[value by]) ? \"G\" :\n    (!\[value rY] && !\[value gx] && \[value by]) ? \"B\" :\n    \"none\"\n\}]\[if \{\[value aaa]\} \{\n    return \"A\"\n\} \{return \"\"\}]\n\[if \{\[value mix]!=\"1\"\} \{return \"mix: \[expr \{\[value mix] * 100\}]%\"\} \{return \"\n\"\}]"
+ note_font "Verdana Bold"
+ selected true
+ xpos -189
+ ypos 80
+ addUserKnob {20 yxy_grade l "SR MultiGrade"}
+ addUserKnob {26 _4 l "" +STARTLINE T "<font color=\"#7a46d3\"><b>SR MultiGrade</font></b>"}
+ addUserKnob {26 _3 l "" +STARTLINE T "<font color='#677'><i> v05, August 27 2025"}
+ addUserKnob {26 _1 l "" +STARTLINE T "<font color='#777'>Made by <b>Sean Brian Rowlands\n"}
+ addUserKnob {26 ""}
+ addUserKnob {41 colorspace_in l colorspace T Colorspace8.colorspace_in}
+ addUserKnob {4 method M {grade merge}}
+ addUserKnob {6 logspace t "do an extra lin-log operation inside colorspace, especially good for edges" +STARTLINE}
+ addUserKnob {26 spasce l "" +STARTLINE}
+ addUserKnob {26 rText l " " T "<b><font color=#c22020>R</font></b>  "}
+ addUserKnob {6 rY l "" -STARTLINE}
+ rY true
+ addUserKnob {26 gText l " " t cyan/red -STARTLINE T "<b><font color=#63ca39>G </font>"}
+ addUserKnob {6 by l "" -STARTLINE}
+ addUserKnob {26 bText l " " t magenta/green -STARTLINE T "<b><font color=#3d59cb>B</font></b>  "}
+ addUserKnob {6 gx l "" -STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {41 mergeMode l merge +HIDDEN T Merge2.operation}
+ addUserKnob {41 mix_merge l mixMerge +HIDDEN T Merge2.mix}
+ addUserKnob {26 ""}
+ addUserKnob {7 preBlurBG +HIDDEN R 0 150}
+ preBlurBG 20
+ addUserKnob {41 crop -STARTLINE +HIDDEN T bgBlur.crop}
+ addUserKnob {41 blackpoint T Grade2.blackpoint}
+ addUserKnob {41 whitepoint T Grade2.whitepoint}
+ addUserKnob {41 black l lift T Grade2.black}
+ addUserKnob {41 white l gain T Grade2.white}
+ addUserKnob {41 multiply T Grade2.multiply}
+ addUserKnob {41 add l offset T Grade2.add}
+ addUserKnob {41 gamma T Grade2.gamma}
+ addUserKnob {41 reverse T Grade2.reverse}
+ addUserKnob {41 black_clamp l blackClamp -STARTLINE T Grade2.black_clamp}
+ addUserKnob {41 white_clamp l whiteClamp -STARTLINE T Grade2.white_clamp}
+ addUserKnob {26 ""}
+ addUserKnob {6 checkAlpha l "Use input alpha?" t "if disabled, shuffles out a complete white alpha" +STARTLINE}
+ checkAlpha true
+ addUserKnob {7 mix l "mix effect"}
+ mix 1
+ addUserKnob {26 _2 l "" +STARTLINE}
+ addUserKnob {20 grA l "grade Alpha" t "grade alpha separate" n 1}
+ grA 0
+ addUserKnob {26 _5 l "" +STARTLINE T "<b><font color=#FFFFFF>A</font></b>  "}
+ addUserKnob {6 aaa l "" -STARTLINE}
+ addUserKnob {26 ""}
+ addUserKnob {41 blackpoint_1 l blackpoint T Grade1.blackpoint}
+ addUserKnob {41 whitepoint_1 l whitepoint T Grade1.whitepoint}
+ addUserKnob {41 black_1 l lift T Grade1.black}
+ addUserKnob {41 white_1 l gain T Grade1.white}
+ addUserKnob {41 multiply_1 l multiply T Grade1.multiply}
+ addUserKnob {41 add_1 l offset T Grade1.add}
+ addUserKnob {41 gamma_1 l gamma T Grade1.gamma}
+ addUserKnob {41 black_clamp_1 l "black clamp" T Grade1.black_clamp}
+ addUserKnob {41 white_clamp_1 l "white clamp" -STARTLINE T Grade1.white_clamp}
+ addUserKnob {26 ""}
+ addUserKnob {20 endGroup n -1}
+}
+ Input {
+  inputs 0
+  name Inputimg
+  xpos -918
+  ypos -470
+ }
+ Shuffle2 {
+  fromInput1 {{0} B}
+  fromInput2 {{0} B}
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.green 0 1 rgba.green 0 1 rgba.blue 0 2 rgba.blue 0 2 white -1 -1 rgba.alpha 0 3"
+  name Shuffle2
+  label "\[value in1] -> \[value out1]"
+  xpos -918
+  ypos -446
+  disable {{!!checkAlpha}}
+ }
+set N905d7000 [stack 0]
+ Viewer {
+  frame_range 1001-1096
+  frame_increment 5
+  fps 25
+  center_fstop 0
+  monitorOutNDISenderName "Nuke - untitled - Viewer1"
+  name Viewer1
+  xpos -2647
+  ypos 399
+ }
+ Input {
+  inputs 0
+  name Inputmask
+  xpos -692
+  ypos 1543
+  number 1
+ }
+ Invert {
+  name Invert1
+  xpos -692
+  ypos 1567
+ }
+ Dot {
+  name Dot4
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -658
+  ypos 1628
+ }
+push $N905d7000
+ Dot {
+  name Dot3
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -886
+  ypos -257
+ }
+set N905d7400 [stack 0]
+ Dot {
+  name Dot2
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1774
+  ypos -257
+ }
+ Dot {
+  name Dot6
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -2503
+  ypos -257
+ }
+ Dot {
+  name Dot31
+  xpos -2503
+  ypos 1182
+ }
+set N905f8000 [stack 0]
+ Dot {
+  name Dot1
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -2503
+  ypos 1628
+ }
+set N905f8400 [stack 0]
+push $N905f8000
+ Dot {
+  name Dot32
+  xpos -1721
+  ypos 1182
+ }
+ Colorspace {
+  colorspace_in {{Colorspace8.colorspace_out}}
+  colorspace_out {{Colorspace8.colorspace_in}}
+  maskChannelInput {{{Colorspace8.maskChannelInput}}}
+  unpremult {{{Colorspace8.unpremult}}}
+  name Colorspace5
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] -> \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -1755
+  ypos 1239
+  disable {{!aaa}}
+ }
+ Grade {
+  channels alpha
+  black_clamp false
+  name Grade1
+  label "\[if \{\[value mix]!=\"1\"\} \{return \"mix: \[expr \{\[value mix] * 100\}]%\"\} \{return \"\n\"\}]"
+  xpos -1755
+  ypos 1317
+  disable {{!aaa}}
+ }
+ Colorspace {
+  colorspace_in {{Colorspace8.colorspace_in}}
+  colorspace_out {{Colorspace8.colorspace_out}}
+  maskChannelInput {{{Colorspace8.maskChannelInput}}}
+  unpremult {{{Colorspace8.unpremult}}}
+  name Colorspace6
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] -> \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -1755
+  ypos 1371
+  disable {{!aaa}}
+ }
+ Dot {
+  name Dot30
+  xpos -1721
+  ypos 1491
+ }
+push $N905d7400
+ Dot {
+  name Dot16
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -446
+  ypos -257
+ }
+ Dot {
+  name Dot7
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -446
+  ypos 1203
+ }
+ Input {
+  inputs 0
+  name Inputbg
+  xpos -1216
+  ypos 45
+  number 2
+ }
+ Dot {
+  name Dotbg
+  label Dotbg
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1182
+  ypos 90
+ }
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace3
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] to \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -1214
+  ypos 140
+  disable {{!logspace}}
+ }
+ Colorspace {
+  colorspace_in {{Colorspace8.colorspace_out}}
+  colorspace_out {{Colorspace8.colorspace_in}}
+  maskChannelInput {{{Colorspace8.maskChannelInput}}}
+  unpremult {{{Colorspace8.unpremult}}}
+  name Colorspace4
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] -> \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -1214
+  ypos 188
+ }
+ Blur {
+  channels rgba
+  size {{parent.preBlurBG}}
+  name bgBlur
+  label "\[value size]"
+  xpos -1214
+  ypos 243
+  disable {{!parent.method}}
+ }
+ Dot {
+  name Dot17
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1182
+  ypos 303
+ }
+push $N905d7400
+ Colorspace {
+  colorspace_out AlexaV3LogC
+  name Colorspace1
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] to \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -920
+  ypos -209
+  disable {{!logspace}}
+ }
+ Colorspace {
+  colorspace_in {{Colorspace8.colorspace_out}}
+  colorspace_out {{Colorspace8.colorspace_in}}
+  maskChannelInput {{{Colorspace8.maskChannelInput}}}
+  unpremult {{{Colorspace8.unpremult}}}
+  name Colorspace9
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] -> \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -920
+  ypos -159
+ }
+ Dot {
+  name Dot13
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -886
+  ypos -77
+ }
+set Nf732000 [stack 0]
+ Dot {
+  name Dot20
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -944
+  ypos -77
+ }
+ Dot {
+  name Dot21
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -996
+  ypos -77
+ }
+set Nf732800 [stack 0]
+ Merge2 {
+  inputs 2
+  operation geometric
+  bbox B
+  mix 0.5
+  name Merge2
+  xpos -1030
+  ypos 300
+  disable {{!parent.method}}
+ }
+ Dot {
+  name Dot15
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -996
+  ypos 357
+ }
+set Nf733000 [stack 0]
+ Dot {
+  name Dot27
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -996
+  ypos 427
+ }
+set Nf733400 [stack 0]
+push $Nf732000
+ Grade {
+  black_clamp false
+  name Grade2
+  label "\[if \{\[value mix]!=\"1\"\} \{return \"mix: \[expr \{\[value mix] * 100\}]%\"\} \{return \"\n\"\}]"
+  xpos -920
+  ypos 148
+ }
+ Dot {
+  name Dot35
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -888
+  ypos 310
+ }
+ Switch {
+  inputs 2
+  which {{parent.method}}
+  name Switch3
+  label "which: \[value which]"
+  xpos -920
+  ypos 418
+ }
+ Dot {
+  name Dot8
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -886
+  ypos 489
+ }
+set Nf766000 [stack 0]
+ Dot {
+  name Dot9
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -520
+  ypos 489
+ }
+ Dot {
+  name Dot19
+  label 6
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -520
+  ypos 898
+ }
+ Dot {
+  name Dot47
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -520
+  ypos 966
+ }
+push $Nf732800
+ Dot {
+  name Dot18
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1472
+  ypos -77
+ }
+set Nf767000 [stack 0]
+ Dot {
+  name Dot36
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1819
+  ypos -77
+ }
+ Dot {
+  name Dot37
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1819
+  ypos 690
+ }
+set Nf767800 [stack 0]
+push $Nf733000
+ Dot {
+  name Dot25
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1318
+  ypos 357
+ }
+ Dot {
+  name Dot28
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1318
+  ypos 549
+ }
+set Nf77c000 [stack 0]
+push $Nf766000
+ Dot {
+  name Dot38
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1410
+  ypos 455
+ }
+set Nf77c400 [stack 0]
+ Switch {
+  inputs 2
+  which {{parent.method}}
+  name Switch8
+  label "which: \[value which]"
+  xpos -2037
+  ypos 542
+ }
+set Nf752f00 [stack 0]
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  fromInput2 {{1} B A}
+  in2 rgb
+  mappings "4 black -1 -1 rgba.alpha 0 3 rgba.red 0 0 rgba.red 0 0 rgba.blue 0 2 rgba.blue 0 2 rgba.green 1 1 rgba.green 0 1"
+  name Shuffle7
+  label "\[value in1] -> \[value out1]\nredblue"
+  xpos -2325
+  ypos 716
+ }
+ Dot {
+  name Dot45
+  label 5
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -2293
+  ypos 764
+ }
+ Dot {
+  name Dot46
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -2293
+  ypos 824
+ }
+push $Nf767800
+push $Nf752f00
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  fromInput2 {{1} B A}
+  in2 rgb
+  mappings "4 black -1 -1 rgba.alpha 0 3 rgba.green 0 1 rgba.green 0 1 rgba.red 0 0 rgba.red 0 0 rgba.blue 1 2 rgba.blue 0 2"
+  name Shuffle6
+  label "\[value in1] -> \[value out1]\nredgreen"
+  xpos -2147
+  ypos 746
+ }
+ Dot {
+  name Dot43
+  label 4
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -2115
+  ypos 838
+ }
+ Dot {
+  name Dot44
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -2115
+  ypos 907
+ }
+push $Nf767800
+push $Nf752f00
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  fromInput2 {{1} B A}
+  in2 rgb
+  mappings "4 black -1 -1 rgba.alpha 0 3 rgba.red 1 0 rgba.red 0 0 rgba.blue 0 2 rgba.blue 0 2 rgba.green 0 1 rgba.green 0 1"
+  name Shuffle5
+  label "\[value in1] -> \[value out1]\ngreenblue"
+  xpos -1971
+  ypos 746
+ }
+ Dot {
+  name Dot42
+  label 3
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1939
+  ypos 831
+ }
+ Dot {
+  name Dot41
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1939
+  ypos 895
+ }
+push $Nf767800
+push $Nf77c000
+push $Nf77c400
+ Switch {
+  inputs 2
+  which {{parent.method}}
+  name Switch6
+  label "which: \[value which]"
+  xpos -1633
+  ypos 542
+ }
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  fromInput2 {{1} B A}
+  in2 rgb
+  mappings "4 black -1 -1 rgba.alpha 0 3 rgba.red 1 0 rgba.red 0 0 rgba.blue 0 2 rgba.blue 0 2 rgba.green 1 1 rgba.green 0 1"
+  name Shuffle4
+  label "\[value in1] -> \[value out1]\nblue"
+  xpos -1633
+  ypos 677
+ }
+ Dot {
+  name Dot39
+  label 2
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1601
+  ypos 903
+ }
+ Dot {
+  name Dot40
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1601
+  ypos 944
+ }
+push $Nf767000
+ Dot {
+  name Dot34
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1475
+  ypos 346
+ }
+ Dot {
+  name Dot11
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1472
+  ypos 773
+ }
+push $Nf77c000
+push $Nf766000
+ Dot {
+  name Dot10
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1216
+  ypos 489
+ }
+ Switch {
+  inputs 2
+  which {{parent.method}}
+  name Switch5
+  label "which: \[value which]"
+  xpos -1250
+  ypos 542
+ }
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  fromInput2 {{1} B A}
+  in2 rgb
+  mappings "4 rgba.green 0 1 rgba.green 0 1 black -1 -1 rgba.alpha 0 3 rgba.red 1 0 rgba.red 0 0 rgba.blue 1 2 rgba.blue 0 2"
+  name Shuffle1
+  label "\[value in1] -> \[value out1]\ngreen"
+  xpos -1250
+  ypos 764
+ }
+ Dot {
+  name Dot14
+  label 1
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1218
+  ypos 827
+ }
+ Dot {
+  name Dot33
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1218
+  ypos 856
+ }
+push $Nf733400
+ Dot {
+  name Dot24
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1075
+  ypos 427
+ }
+ Dot {
+  name Dot26
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1075
+  ypos 549
+ }
+push $Nf732000
+ Dot {
+  name Dot23
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -696
+  ypos -77
+ }
+ Dot {
+  name Dot29
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -696
+  ypos 545
+ }
+ Switch {
+  inputs 2
+  which {{parent.method}}
+  name Switch4
+  label "which: \[value which]"
+  xpos -1034
+  ypos 536
+ }
+ Dot {
+  name Dot12
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -1000
+  ypos 778
+ }
+push $Nf766000
+ Shuffle2 {
+  inputs 2
+  fromInput1 {{0} B A}
+  fromInput2 {{1} B A}
+  in2 rgb
+  mappings "4 rgba.red 0 0 rgba.red 0 0 rgba.blue 1 2 rgba.blue 0 2 rgba.green 1 1 rgba.green 0 1 black -1 -1 rgba.alpha 0 3"
+  name Shuffle3
+  label "\[value in1] -> \[value out1]\nred"
+  xpos -920
+  ypos 769
+ }
+ Switch {
+  inputs 7
+  which {{"\[expr \{\n    (\[value rY] && \[value gx] && \[value by]) ? 6 :\n    (!\[value rY] && \[value gx] && \[value by]) ? 3 :\n    (\[value rY] && \[value gx] && !\[value by]) ? 4 :\n    (\[value rY] && !\[value gx] && \[value by]) ? 5 :\n    (\[value rY] && !\[value gx] && !\[value by]) ? 0 :\n    (!\[value rY] && \[value gx] && !\[value by]) ? 1 :\n    (!\[value rY] && !\[value gx] && \[value by]) ? 2 :\n    0\n\}]\n"}}
+  name Switch1
+  label "which: \[value which]"
+  xpos -920
+  ypos 959
+ }
+ Colorspace {
+  colorspace_in CIE-Yxy
+  name Colorspace8
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] -> \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -920
+  ypos 1013
+ }
+ Switch {
+  inputs 2
+  which {{"\[expr \{\n    (!\[value rY] && !\[value gx] && !\[value by]) ? 1 :\n    (\[value rY] && \[value gx] && \[value by]) ? 0 :\n    (\[value rY] && \[value gx] && !\[value by]) ? 0 :\n    (\[value rY] && !\[value gx] && \[value by]) ? 0 :\n    (!\[value rY] && \[value gx] && \[value by]) ? 0 :\n    (\[value rY] && !\[value gx] && !\[value by]) ? 0 :\n    (!\[value rY] && \[value gx] && !\[value by]) ? 0 :\n    (!\[value rY] && !\[value gx] && \[value by]) ? 0 :\n    0\n\}]\n"}}
+  name Switch2
+  label "which: \[value which]"
+  xpos -920
+  ypos 1196
+ }
+ Colorspace {
+  colorspace_in AlexaV3LogC
+  name Colorspace2
+  label "\[if \{\[value colorspace_in]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_in]\"\}] to \[if \{\[value colorspace_out]==\"RGB\"\} \{return \"Linear\"\} \{return \"\[value colorspace_out]\"\}]"
+  xpos -920
+  ypos 1327
+  disable {{!logspace}}
+ }
+ Copy {
+  inputs 2
+  from0 rgba.alpha
+  to0 rgba.alpha
+  name Copy1
+  xpos -918
+  ypos 1484
+ }
+ Dot {
+  name Dot22
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -886
+  ypos 1573
+ }
+ Keymix {
+  inputs 3
+  bbox B
+  name Keymix1
+  label "bbox: \[value bbox]"
+  xpos -920
+  ypos 1613
+  disable {{"1-\[exists parent.input1]"}}
+ }
+push $N905f8400
+ Dot {
+  name Dot5
+  note_font "Arial Black"
+  note_font_size 20
+  note_font_color 0xffffffff
+  xpos -2503
+  ypos 1906
+ }
+ Dissolve {
+  inputs 2
+  which {{parent.mix}}
+  metainput 1
+  name Dissolve1
+  label "which: \[value which]"
+  xpos -920
+  ypos 1891
+ }
+ Output {
+  name Output
+  xpos -920
+  ypos 1965
+ }
+end_group
