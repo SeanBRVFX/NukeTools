@@ -18,5 +18,4 @@ Each tool may include its own instructions or documentation where needed.
 
 Feel free to browse, download, and use anything that may be useful in your own Nuke workflow.
 
-While you are here, you can also read more about some of my tools by visiting my webpage!
-`https://seanbrvfx.com/` 
+While you are here, you can also read more about some of my tools by visiting [my website](https://seanbrvfx.com/).
