@@ -1,4 +1,5 @@
 '''
+Original by Nicholas Joseph, with some slight modifications to the label output.
 Info:
 There are countless times when I find myself searching for the source 
 of the exported Transform/CornerPin, and when there are many trackers
